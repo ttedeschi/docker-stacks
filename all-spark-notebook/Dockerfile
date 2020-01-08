@@ -49,3 +49,39 @@ RUN conda install --quiet --yes 'spylon-kernel=0.4*' && \
     rm -rf /home/$NB_USER/.local && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
+
+
+USER root
+COPY start.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start.sh
+COPY spark-defaults.conf /usr/local/spark/conf/spark-defaults.conf
+
+WORKDIR /tmp
+#ENV SPARK_VER=${SPARK_VER:-"2.4.4"}
+#ENV INTEL_SPARK_VER=${INTEL_SPARK_VER:-"2.3.1"}
+#ENV INTEL_SCALA_VER=${INTEL_SCALA_VER:-"2.11.8"}
+#ENV HADOOP_VER=${HADOOP_VER:-"2.7"}
+#ENV BIGDL_VER=${BIGDL_VER:-"0.7.1"}
+#ENV BIGDL_URI=${BIGDL_URI:-"https://repo1.maven.org/maven2/com/intel/analytics/bigdl/dist-spark-${INTEL_SPARK_VER}-scala-${INTEL_SCALA_VER}-all/${BIGDL_VER}/dist-spark-${INTEL_SPARK_VER}-scala-${INTEL_SCALA_VER}-all-${BIGDL_VER}-dist.zip"}
+#ENV PYTHONPATH=${PYTHONPATH}:/usr/local/spark/python/lib/bigdl-${BIGDL_VER}-python-api.zip
+
+#RUN mkdir intel \
+#    && wget ${BIGDL_URI} -O bigdl.zip
+
+#RUN unzip -o bigdl.zip \
+#    && mv lib/*.zip /usr/local/spark/python/lib/ \
+#    && mv lib/*.jar /usr/local/spark/jars/ \
+#    && rm -Rf /tmp/intel
+
+
+RUN chown $NB_UID:$NB_UID /usr/local/spark/conf/spark-defaults.conf
+RUN chown $NB_UID:$NB_UID /home/jovyan/work
+USER $NB_UID
+WORKDIR /home/jovyan/work
+#ENV SPARK_VER=${SPARK_VER:-"2.4.4"}
+#ENV INTEL_SPARK_VER=${INTEL_SPARK_VER:-"2.3.1"}
+#ENV INTEL_SCALA_VER=${INTEL_SCALA_VER:-"2.11.8"}
+#ENV HADOOP_VER=${HADOOP_VER:-"2.7"}
+#ENV BIGDL_VER=${BIGDL_VER:-"0.7.1"}
+#ENV BIGDL_URI=${BIGDL_URI:-"https://repo1.maven.org/maven2/com/intel/analytics/bigdl/dist-spark-${INTEL_SPARK_VER}-scala-${INTEL_SCALA_VER}-all/${BIGDL_VER}/dist-spark-${INTEL_SPARK_VER}-scala-${INTEL_SCALA_VER}-all-${BIGDL_VER}-dist.zip"}
+#ENV PYTHONPATH=${PYTHONPATH}:/usr/local/spark/python/lib/bigdl-${BIGDL_VER}-python-api.zip
